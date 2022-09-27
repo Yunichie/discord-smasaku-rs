@@ -10,7 +10,7 @@ use serenity::{
             interaction::{
                 application_command::{
                     CommandDataOption,
-                    CommandDataOptionValue
+                    //CommandDataOptionValue
                 }
             }
         }
@@ -46,12 +46,12 @@ pub fn register(
 }
 
 pub fn run(options: &[CommandDataOption]) -> String {
-    let option = options
+    let _option = options
         .get(0)
         .expect("Expected string option")
         .resolved
         .as_ref()
         .expect("Expected string object");
     
-        // then what?
+        todo!()
 }

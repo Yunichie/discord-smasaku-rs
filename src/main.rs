@@ -60,7 +60,10 @@ impl EventHandler for Handler {
 
         let commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
             commands
-                .create_application_command(|command| commands::perkenalan_slash::register(command))
+                .create_application_command(|mut command| {
+                    command = commands::perkenalan_slash::register(command);
+                    command
+                })
         })
         .await;
 
@@ -70,6 +73,7 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
+    dotenv::dotenv().expect("Failed to load .env file");
     let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
 
     let mut client = Client::builder(token, GatewayIntents::empty())
