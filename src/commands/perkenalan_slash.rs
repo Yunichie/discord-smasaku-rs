@@ -7,13 +7,20 @@ use serenity::{
             command::{
                 CommandOptionType
             },
-            interaction::{
-                application_command::{
-                    CommandDataOption,
-                    //CommandDataOptionValue
+            application::{
+                interaction::{
+                    application_command::{
+                        ApplicationCommandInteraction
+                    }
                 }
-            }
+            },
+            channel::{
+                Message
+            },
         }
+    },
+    prelude::{
+        *
     }
 };
 
@@ -45,13 +52,27 @@ pub fn register(
         })
 }
 
-pub fn run(options: &[CommandDataOption]) -> String {
-    let _option = options
-        .get(0)
-        .expect("Expected string option")
-        .resolved
-        .as_ref()
-        .expect("Expected string object");
-    
-        todo!()
+pub fn run(options: &ApplicationCommandInteraction) -> String {
+    let nama = options
+    .data
+    .options
+    .iter()
+    .find(|option| option.name == "nama")
+    .cloned();
+
+    let kelas = options
+    .data
+    .options
+    .iter()
+    .find(|option| option.name == "kelas")
+    .cloned();
+
+    let angkatan = options
+    .data
+    .options
+    .iter()
+    .find(|option| option.name == "angkatan")
+    .cloned();
+
+    format!("{}, {}, {}", nama.unwrap().value.unwrap().as_str().unwrap(), kelas.unwrap().value.unwrap().as_str().unwrap(), angkatan.unwrap().value.unwrap().as_str().unwrap())
 }

@@ -8,13 +8,13 @@ use serenity::{
             interaction::{
                 Interaction,
                 InteractionResponseType
-            }
+            },
+            command::{
+                Command
+            },
         },
         gateway::{
             Ready
-        },
-        id::{
-            GuildId
         }
     },
     prelude::{
@@ -31,7 +31,7 @@ impl EventHandler for Handler {
             println!("Received command interaction: {:#?}", command);
 
             let content = match command.data.name.as_str() {
-                "perkenalan" => commands::perkenalan_slash::run(&command.data.options),
+                "perkenalan" => commands::perkenalan_slash::run(&command),
                 _ => "not implemented :(".to_string(),
             };
 
@@ -51,23 +51,12 @@ impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
 
-        let guild_id = GuildId(
-            env::var("GUILD_ID")
-                .expect("Expected GUILD_ID in environment")
-                .parse()
-                .expect("GUILD_ID must be an integer"),
-        );
-
-        let commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
-            commands
-                .create_application_command(|mut command| {
-                    command = commands::perkenalan_slash::register(command);
-                    command
-                })
+        let guild_command = Command::create_global_application_command(&ctx.http, |command| {
+            commands::bantuan::register(command)
         })
         .await;
 
-        println!("I now have the following guild slash commands: {:#?}", commands);
+        println!("I now have the following guild slash commands: {:#?}", guild_command);
     }
 }
 
