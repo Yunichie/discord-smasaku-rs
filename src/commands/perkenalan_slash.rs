@@ -54,4 +54,5 @@ pub fn run(options: &[CommandDataOption]) -> String {
         .expect("Expected string object");
     
         // then what?
+    todo!()
 }
