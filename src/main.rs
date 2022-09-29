@@ -15,6 +15,11 @@ use serenity::{
         },
         gateway::{
             Ready
+        },
+        prelude::{
+            channel::{
+                Message
+            }
         }
     },
     prelude::{
@@ -30,10 +35,13 @@ impl EventHandler for Handler {
         if let Interaction::ApplicationCommand(command) = interaction {
             println!("Received command interaction: {:#?}", command);
 
-            let content = match command.data.name.as_str() {
-                "perkenalan" => commands::perkenalan_slash::run(&command),
-                _ => "not implemented :(".to_string(),
-            };
+            let content = command.data.name.as_str();
+
+            if content == "perkenalan" {
+                commands::perkenalan_slash::run(&command);
+            } /*else if content == "bantuan" {
+                commands::bantuan::run(ctx);
+            }*/
 
             if let Err(why) = command
                 .create_interaction_response(&ctx.http, |response| {
