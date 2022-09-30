@@ -15,8 +15,6 @@ serenity = { default-features = false, features = [
     "gateway",
     "http",
     "model",
-    "framework",
-    "standard_framework",
     "time",
     "unstable_discord_api",
     "utils",

@@ -7,7 +7,7 @@ use serenity::{
         application::{
             interaction::{
                 Interaction,
-                InteractionResponseType
+                //InteractionResponseType
             },
             command::{
                 Command
@@ -16,11 +16,7 @@ use serenity::{
         gateway::{
             Ready
         },
-        prelude::{
-            channel::{
-                Message
-            }
-        }
+        Timestamp
     },
     prelude::{
         *
@@ -35,24 +31,25 @@ impl EventHandler for Handler {
         if let Interaction::ApplicationCommand(command) = interaction {
             println!("Received command interaction: {:#?}", command);
 
-            let content = command.data.name.as_str();
-
-            if content == "perkenalan" {
-                commands::perkenalan_slash::run(&command);
-            } /*else if content == "bantuan" {
-                commands::bantuan::run(ctx);
-            }*/
-
-            if let Err(why) = command
-                .create_interaction_response(&ctx.http, |response| {
-                    response
-                        .kind(InteractionResponseType::ChannelMessageWithSource)
-                        .interaction_response_data(|message| message.content(content))
-                })
-                .await
-            {
-                println!("Cannot respond to slash command: {}", why);
-            }
+            let _content = match command.data.name.as_str() {
+                "perkenalan" => commands::perkenalan_slash::run(&command, &ctx).await,
+                "bantuan" => commands::bantuan::run(&ctx, &command).await,
+                _ => {
+                    let msg = command.channel_id
+                    .send_message(&ctx.http, |msg| {
+                        msg.embed(|e| {
+                            e
+                            .title("Error")
+                            .description("Not implemented")
+                            .timestamp(Timestamp::now())
+                        })
+                    }).await;
+                    
+                    if let Err(why) = msg {
+                        println!("Error sending message: {:?}", why);
+                    }
+                }
+            };
         }
     }
 
@@ -60,7 +57,7 @@ impl EventHandler for Handler {
         println!("{} is connected!", ready.user.name);
 
         let guild_command = Command::create_global_application_command(&ctx.http, |command| {
-            commands::bantuan::register(command)
+            commands::perkenalan_slash::register(command)
         })
         .await;
 

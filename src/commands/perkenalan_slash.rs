@@ -11,13 +11,12 @@ use serenity::{
                 interaction::{
                     application_command::{
                         ApplicationCommandInteraction
-                    }
+                    },
+                    InteractionResponseType
                 }
             },
-            channel::{
-                Message
-            },
-        }
+        },
+        Timestamp
     },
     prelude::{
         *
@@ -52,7 +51,7 @@ pub fn register(
         })
 }
 
-pub fn run(options: &ApplicationCommandInteraction) -> String {
+pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     let nama = options
     .data
     .options
@@ -74,5 +73,49 @@ pub fn run(options: &ApplicationCommandInteraction) -> String {
     .find(|option| option.name == "angkatan")
     .cloned();
 
-    format!("{}, {}, {}", nama.unwrap().value.unwrap().as_str().unwrap(), kelas.unwrap().value.unwrap().as_str().unwrap(), angkatan.unwrap().value.unwrap().as_str().unwrap())
+    //format!("{}, {}, {}", nama.unwrap().value.unwrap().as_str().unwrap(), kelas.unwrap().value.unwrap().as_str().unwrap(), angkatan.unwrap().value.unwrap().as_str().unwrap())
+    /*let msg = c_id
+    .send_message(&ctx.http, |msg| {
+        msg
+        .add_file("./image/welcome.jpg")
+        .embed(|e| {
+            e
+            .title("Perkenalan")
+            .fields(vec![
+                ("Nama", nama.unwrap().value.unwrap().as_str().unwrap(), false),
+                ("Kelas", kelas.unwrap().value.unwrap().as_str().unwrap(), false),
+                ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false)
+            ])
+            .timestamp(Timestamp::now())
+        })
+    }).await;
+
+    if let Err(why) = msg {
+        println!("Error sending message: {:?}", why);
+    }*/
+
+    let perkenalan_slash = options
+    .create_interaction_response(&ctx.http, |resp| {
+        resp
+        .kind(InteractionResponseType::ChannelMessageWithSource)
+        .interaction_response_data(|msg| {
+            msg
+            //.add_file("./image/welcome.jpg")
+            .embed(|e| {
+                e
+                .color((247, 10, 10))
+                .title("Perkenalan")
+                .fields(vec![
+                    ("Nama", nama.unwrap().value.unwrap().as_str().unwrap(), false),
+                    ("Kelas", kelas.unwrap().value.unwrap().as_str().unwrap(), false),
+                    ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false)
+                ])
+                .timestamp(Timestamp::now())
+            })
+        })
+    }).await;
+
+    if let Err(why) = perkenalan_slash {
+        println!("Error sending message: {:?}", why);
+    }
 }
