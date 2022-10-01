@@ -69,8 +69,10 @@ pub fn register(
 }*/
 
 pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
+    let user = &interaction.user;
+    //let thumbnail = &user.face();
 
-    let _bantuan = interaction
+    let bantuan = interaction
     .create_interaction_response(&ctx.http, |resp| {
         resp
         .kind(InteractionResponseType::ChannelMessageWithSource)
@@ -105,8 +107,13 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
     5. Opsi `medsos` adalah opsional; tidak wajib diisi.
                     "#, false)
                 ])
+                .footer(|f| f.icon_url(&user.avatar_url().unwrap()).text(&user.tag()))
                 .timestamp(Timestamp::now())
             })
         })
     }).await;
+    
+    if let Err(why) = bantuan {
+        println!("Error sending message: {:?}", why);
+    }
 }

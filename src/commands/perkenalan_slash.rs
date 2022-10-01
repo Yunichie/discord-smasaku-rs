@@ -72,27 +72,9 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     .iter()
     .find(|option| option.name == "angkatan")
     .cloned();
-
-    //format!("{}, {}, {}", nama.unwrap().value.unwrap().as_str().unwrap(), kelas.unwrap().value.unwrap().as_str().unwrap(), angkatan.unwrap().value.unwrap().as_str().unwrap())
-    /*let msg = c_id
-    .send_message(&ctx.http, |msg| {
-        msg
-        .add_file("./image/welcome.jpg")
-        .embed(|e| {
-            e
-            .title("Perkenalan")
-            .fields(vec![
-                ("Nama", nama.unwrap().value.unwrap().as_str().unwrap(), false),
-                ("Kelas", kelas.unwrap().value.unwrap().as_str().unwrap(), false),
-                ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false)
-            ])
-            .timestamp(Timestamp::now())
-        })
-    }).await;
-
-    if let Err(why) = msg {
-        println!("Error sending message: {:?}", why);
-    }*/
+    
+    let user = &options.user;
+    let thumbnail = &user.avatar_url().unwrap();
 
     let perkenalan_slash = options
     .create_interaction_response(&ctx.http, |resp| {
@@ -108,10 +90,14 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
                 .fields(vec![
                     ("Nama", nama.unwrap().value.unwrap().as_str().unwrap(), false),
                     ("Kelas", kelas.unwrap().value.unwrap().as_str().unwrap(), false),
-                    ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false)
+                    ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false),
+                    ("Media Sosial", "Belum diimplementasi!", false)
                 ])
+                .thumbnail(thumbnail)
+                .footer(|f| f.text(&user.tag()))
                 .timestamp(Timestamp::now())
             })
+            //.add_file("./image/welcome.jpg")
         })
     }).await;
 
