@@ -49,6 +49,13 @@ pub fn register(
                 .kind(CommandOptionType::String)
                 .required(true)
         })
+        .create_option(|option| {
+            option
+                .name("medsos")
+                .description("Media sosial kamu! (opsional)")
+                .kind(CommandOptionType::String)
+                .required(false)
+        })
 }
 
 pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
@@ -72,9 +79,42 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     .iter()
     .find(|option| option.name == "angkatan")
     .cloned();
-    
+
+    let mut medsos = options
+    .data
+    .options
+    .iter()
+    .find(|option| option.name == "medsos")
+    .cloned();
+
+    println!("{:?}", medsos);
+    /*match medsos {
+        None => {
+            medsos = medsos.unwrap().value.unwrap().as_str().unwrap() = "-";
+            medsos = "-";
+        }
+    }*/
+
+    //let medsos = medsos.unwrap().value.unwrap();
+    //let medsos = medsos.as_str().unwrap();
+
     let user = &options.user;
-    let thumbnail = &user.avatar_url().unwrap();
+    //let cache = &ctx.cache;
+    let roles = &options.member.as_ref().unwrap().roles;
+
+    // Ganti role id!
+    // User sudah mempunyai role smasaku
+    if roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
+        println!("contains 1025826518259224608");
+    }
+
+    // User belum mempunyai role smasaku
+    if roles.iter().any(|&i| i.as_u64() == &1025826518259224608) == false {
+        println!("contains 1025826518259224608");
+    }
+
+    // RegEx
+
 
     let perkenalan_slash = options
     .create_interaction_response(&ctx.http, |resp| {
@@ -91,9 +131,9 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
                     ("Nama", nama.unwrap().value.unwrap().as_str().unwrap(), false),
                     ("Kelas", kelas.unwrap().value.unwrap().as_str().unwrap(), false),
                     ("Angkatan", angkatan.unwrap().value.unwrap().as_str().unwrap(), false),
-                    ("Media Sosial", "Belum diimplementasi!", false)
+                    //("Media Sosial", medsos, false)
                 ])
-                .thumbnail(thumbnail)
+                .thumbnail(&user.avatar_url().unwrap())
                 .footer(|f| f.text(&user.tag()))
                 .timestamp(Timestamp::now())
             })
