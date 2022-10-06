@@ -1,4 +1,5 @@
 mod commands;
+mod capitalizer;
 
 use std::env;
 use serenity::{

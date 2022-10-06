@@ -1,3 +1,5 @@
+use crate::capitalizer::capitalize;
+
 use serenity::{
     builder::{
         CreateApplicationCommand
@@ -95,8 +97,15 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     println!("{:?}", medsos);
     
     // TODO: medsos
+    /*match medsos {
+        None => println!("none"),
+        Some(s) => {
+            let medsos = &medsos.unwrap().value.unwrap().as_str().unwrap();
+        }
+    }*/
+
     /*if medsos.is_none() {
-        medsos = "-";
+        // change medsos
     }*/
 
     //let medsos = medsos.unwrap().value.unwrap();
@@ -109,13 +118,18 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     // TODO: role id & channel id
     // User sudah mempunyai role smasaku
     if roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
-        println!("contains 1025826518259224608");
+        let sudah_punya_role = options.channel_id.say(&ctx.http, "Kamu sudah memperkenalkan diri!").await;
+
+        if let Err(why) = sudah_punya_role {
+            println!("Error sending message: {:?}", why);
+        }
     }
 
     // User belum mempunyai role smasaku
-    if !roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
+    // tidak dibutuhkan?
+    /*if !roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
         println!("does not contain 1025826518259224608");
-    }
+    }*/
 
     // TODO: RegEx; embed error
     // RegEx
@@ -141,10 +155,11 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
             msg
             .embed(|e| {
                 e
+                //.attachment("./image/welcome.jpg")
                 .color((247, 10, 10))
                 .title("Perkenalan")
                 .fields(vec![
-                    ("Nama", capitalize(&nama), false),
+                    ("Nama", capitalize::capitalize(&nama), false),
                     ("Kelas", kelas.to_uppercase(), false),
                     ("Angkatan", angkatan, false),
                     //("Media Sosial", medsos, false)
@@ -159,35 +174,12 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     })
     .await;
 
+    let _followup = options
+    .create_followup_message(&ctx.http, |resp| {
+        resp.content("@user Jangan lupa untuk mengambil _roles_ di #roles setelah memperkenalkan diri.")
+    }).await;
+
     if let Err(why) = perkenalan_slash {
         println!("Error sending message: {:?}", why);
     }
-}
-
-// TODO: Kapitalisasi; pindahkan ke file tersendiri untuk pemakaian di luar perintah `perkenalan_slash`(?)
-fn capitalize(string: &str) -> String {
-    let s = string.to_lowercase();  // lowercase to make the string uniform
-    let s_bind = &s.split_whitespace().collect::<Vec<&str>>();  // split string at whitespace, store into an array
-    let find_first_letter = Regex::new(r"\b(\w)").unwrap(); // "take every character after the word boundary"
-    let mut return_this = String::new();    // an empty string for storing away the modified string
-
-    for i in s_bind {   // iterate through array (s_bind; splitted at whitespace strings)
-        return_this.push_str(
-            &find_first_letter
-            .replace(i, 
-                i
-                .chars()
-                .next()
-                .unwrap()
-                .to_uppercase()
-                .to_string())
-            .to_string()
-            .chars()
-            .collect::<String>()
-        );  // push the matched and uppercased character (replaced) to the empty string, join together with the unmodified string
-        return_this.push_str(" ");  // join a whitespace
-    }
-    return_this.pop();  // because of the loop, there will be an extra whitespace at the end of the string. Delete it.
-
-    return return_this  // this should now capitalize the first letter of each given set of string. Correctly.
 }
