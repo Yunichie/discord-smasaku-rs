@@ -114,10 +114,12 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     let user = &options.user;
     //let cache = &ctx.cache;
     let roles = &options.member.as_ref().unwrap().roles;
+    let role_id = &1025826518259224608;
+    let ch_id = &1024284784077320255;
 
     // TODO: role id & channel id
     // User sudah mempunyai role smasaku
-    if roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
+    if roles.iter().any(|&i| i.as_u64() == role_id) {
         let sudah_punya_role = options.channel_id.say(&ctx.http, "Kamu sudah memperkenalkan diri!").await;
 
         if let Err(why) = sudah_punya_role {
@@ -126,10 +128,13 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     }
 
     // User belum mempunyai role smasaku
-    // tidak dibutuhkan?
-    /*if !roles.iter().any(|&i| i.as_u64() == &1025826518259224608) {
-        println!("does not contain 1025826518259224608");
-    }*/
+    if !roles.iter().any(|&i| i.as_u64() == role_id) && options.channel_id.as_u64() != ch_id {
+        let ch_err = options.channel_id.say(&ctx.http, "Kamu hanya bisa memperkenalkan diri di #introduction").await;
+
+        if let Err(why) = ch_err {
+            println!("Error sending message: {:?}", why);
+        }
+    }
 
     // TODO: RegEx; embed error
     // RegEx
@@ -137,17 +142,66 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     let x = Regex::new(r"^(X)\s([0-9]|1[0-2])$").unwrap();
     let regex_angkatan = Regex::new(r#"^(([0-9]){4})|(^([0-9]){4}/([0-9]){4})$"#).unwrap();
 
-    /*if !(x.is_match(&kelas)) && !(xi_xii.is_match(&kelas)) {
+    if !(x.is_match(&kelas)) && !(xi_xii.is_match(&kelas)) {
         // Kirim embed error!
-        todo!();
+        let kls_err = options
+        .create_interaction_response(&ctx.http, |resp| {
+            resp
+            .kind(InteractionResponseType::ChannelMessageWithSource)
+            .interaction_response_data(|msg| {
+                msg
+                .embed(|e| {
+                    e
+                    .color((247, 10, 10))
+                    .title("Format perkenalan tidak sesuai!")
+                    .description(r#"
+Format Kelas yang benar:
+**[XI/XII] [MIPA/IPS] [1-12]**;
+**X [1-12]**.
+
+Contoh: X 3, XI MIPA 3
+                    "#)
+                    .footer(|f| f.text("[] tidak perlu dimasukkan."))
+                })
+            })
+        }).await;
+
+        if let Err(why) = kls_err {
+            println!("Error sending message: {:?}", why);
+        }
     }
 
     if !(regex_angkatan.is_match(&angkatan)) {
         // Kirim embed error!
-        todo!();
-    }*/
+        let angkt_err = options
+        .create_interaction_response(&ctx.http, |resp| {
+            resp
+            .kind(InteractionResponseType::ChannelMessageWithSource)
+            .interaction_response_data(|msg| {
+                msg
+                .embed(|e| {
+                    e
+                    .color((247, 10, 10))
+                    .title("Format perkenalan tidak sesuai!")
+                    .description(r#"
+Format Angkatan yang benar:
+1. **[tahun]/[tahun]**;
+2. **[tahun masuk]**.
 
-    let perkenalan_slash = options
+Contoh: 2021/2022 atau cukup 2021.
+                    "#)
+                    .footer(|f| f.text("[] tidak perlu dimasukkan."))
+                })
+            })
+        }).await;
+
+        if let Err(why) = angkt_err {
+            println!("Error sending message: {:?}", why);
+        }
+    }
+
+    if !roles.iter().any(|&i| i.as_u64() == role_id) && options.channel_id.as_u64() == ch_id {
+        let perkenalan_slash = options
     .create_interaction_response(&ctx.http, |resp| {
         resp
         .kind(InteractionResponseType::ChannelMessageWithSource)
@@ -174,12 +228,13 @@ pub async fn run(options: &ApplicationCommandInteraction, ctx: &Context) {
     })
     .await;
 
-    let _followup = options
-    .create_followup_message(&ctx.http, |resp| {
-        resp.content("@user Jangan lupa untuk mengambil _roles_ di #roles setelah memperkenalkan diri.")
-    }).await;
-
-    if let Err(why) = perkenalan_slash {
-        println!("Error sending message: {:?}", why);
+        let _followup = options
+        .create_followup_message(&ctx.http, |resp| {
+            resp.content("@user Jangan lupa untuk mengambil _roles_ di #roles setelah memperkenalkan diri.")
+        }).await;
+        
+        if let Err(why) = perkenalan_slash {
+            println!("Error sending message: {:?}", why);
+        }
     }
 }

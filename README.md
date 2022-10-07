@@ -18,3 +18,7 @@
 
 ## Modul
 - [X] capitalize() sebagai modul tersendiri.
+
+### Isu
+- [ ] Follow-up seharusnya tidak terkirim.
+- [ ] Tinjau ulang if statement.
