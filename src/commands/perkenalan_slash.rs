@@ -110,8 +110,12 @@ pub async fn run(options: &mut ApplicationCommandInteraction, ctx: &Context) {
     // User sudah mempunyai role smasaku
     if roles.iter().any(|&i| i.as_u64() == role_id) {
         let sudah_punya_role = options
-            .channel_id
-            .say(&ctx.http, "Kamu sudah memperkenalkan diri!")
+            .create_interaction_response(&ctx.http, |resp| {
+                resp.kind(InteractionResponseType::ChannelMessageWithSource)
+                    .interaction_response_data(|msg| {
+                        msg.content("Kamu sudah memperkenalkan diri!")
+                    })
+            })
             .await;
 
         if let Err(why) = sudah_punya_role {
@@ -122,11 +126,12 @@ pub async fn run(options: &mut ApplicationCommandInteraction, ctx: &Context) {
     // User belum mempunyai role smasaku
     if !roles.iter().any(|&i| i.as_u64() == role_id) && options.channel_id.as_u64() != ch_id {
         let ch_err = options
-            .channel_id
-            .say(
-                &ctx.http,
-                "Kamu hanya bisa memperkenalkan diri di #introduction",
-            )
+            .create_interaction_response(&ctx.http, |resp| {
+                resp.kind(InteractionResponseType::ChannelMessageWithSource)
+                    .interaction_response_data(|msg| {
+                        msg.content("Kamu hanya bisa memperkenalkan diri di #introduction!")
+                    })
+            })
             .await;
 
         if let Err(why) = ch_err {
