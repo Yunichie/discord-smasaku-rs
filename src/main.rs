@@ -1,51 +1,40 @@
-mod commands;
 mod capitalizer;
+mod commands;
 
-use std::env;
 use serenity::{
     async_trait,
     model::{
-        application::{
-            interaction::{
-                Interaction,
-                //InteractionResponseType
-            },
-            command::{
-                Command
-            },
-        },
-        gateway::{
-            Ready
-        },
-        Timestamp
+        application::{command::Command, interaction::Interaction},
+        gateway::Ready,
+        Timestamp,
     },
-    prelude::{
-        *
-    }
+    prelude::*,
 };
+use std::env;
 
 struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        if let Interaction::ApplicationCommand(command) = interaction {
+        if let Interaction::ApplicationCommand(mut command) = interaction {
             println!("Received command interaction: {:#?}", command);
 
             let _content = match command.data.name.as_str() {
-                "perkenalan" => commands::perkenalan_slash::run(&command, &ctx).await,
+                "perkenalan" => commands::perkenalan_slash::run(&mut command, &ctx).await,
                 "bantuan" => commands::bantuan::run(&ctx, &command).await,
                 _ => {
-                    let msg = command.channel_id
-                    .send_message(&ctx.http, |msg| {
-                        msg.embed(|e| {
-                            e
-                            .title("Error")
-                            .description("Not implemented")
-                            .timestamp(Timestamp::now())
+                    let msg = command
+                        .channel_id
+                        .send_message(&ctx.http, |msg| {
+                            msg.embed(|e| {
+                                e.title("Error")
+                                    .description("Not implemented")
+                                    .timestamp(Timestamp::now())
+                            })
                         })
-                    }).await;
-                    
+                        .await;
+
                     if let Err(why) = msg {
                         println!("Error sending message: {:?}", why);
                     }
@@ -62,7 +51,10 @@ impl EventHandler for Handler {
         })
         .await;
 
-        println!("I now have the following guild slash commands: {:#?}", guild_command);
+        println!(
+            "I now have the following guild slash commands: {:#?}",
+            guild_command
+        );
     }
 }
 

@@ -1,29 +1,18 @@
 use serenity::{
-    builder::{
-        CreateApplicationCommand
-    },
+    builder::CreateApplicationCommand,
     model::{
-        application::{
-            interaction::{
-                application_command::{
-                    ApplicationCommandInteraction
-                },
-                //Interaction,
-                InteractionResponseType
-            }
+        application::interaction::{
+            application_command::ApplicationCommandInteraction,
+            //Interaction,
+            InteractionResponseType,
         },
-        Timestamp
+        Timestamp,
     },
-    prelude::{
-        *
-    }
+    prelude::*,
 };
 
-pub fn register(
-    command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
-    command
-        .name("bantuan")
-        .description("Dapatkan bantuan!")
+pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
+    command.name("bantuan").description("Dapatkan bantuan!")
 }
 
 pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
@@ -69,7 +58,7 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
             })
         })
     }).await;
-    
+
     if let Err(why) = bantuan {
         println!("Error sending message: {:?}", why);
     }

@@ -1,24 +1,24 @@
-### To-Do
+## To-Do
 
-## Bantuan
+### Bantuan
 - [ ] Application; client; bot avatar.
 
-## Perkenalan-slash
+### Perkenalan-slash
 - [ ] Gambar "selamat datang".
 - [X] Batasan:
   - [X] Pemilik role `smasaku` tidak bisa menggunakan perintah.
   - [X] Perintah hanya bisa dijalankan di kanal `#introduction`.
-- [ ] Field, dan opsi untuk `Media Sosial`.
-  - [ ] Field.
+- [X] Field, dan opsi untuk `Media Sosial`.
+  - [X] Field.
   - [X] Opsi.
-- [ ] Batasan (Regular Expression) untuk `Kelas`, dan `Angkatan`.
+- [X] Batasan (Regular Expression) untuk `Kelas`, dan `Angkatan`.
 - [X] Kapitalisasi.
 - [X] Follow-up message untuk mengambil role.
-- [ ] Beri role `smasaku` setelah memperkenalkan diri.
+- [X] Beri role `smasaku` setelah memperkenalkan diri.
 
-## Modul
+### Modul
 - [X] capitalize() sebagai modul tersendiri.
 
-### Isu
-- [ ] Follow-up seharusnya tidak terkirim.
-- [ ] Tinjau ulang if statement.
+## Isu
+- [X] Follow-up seharusnya tidak terkirim.
+- [X] Tinjau ulang if statement.
