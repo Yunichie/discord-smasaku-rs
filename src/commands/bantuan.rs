@@ -31,28 +31,30 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
                     ("Nama", "`/perkenalan`", false),
                     ("Penggunaan", "/perkenalan `nama:` `kelas:` `angkatan:`", false),
                     ("Format", r#"
-    `nama`: `nama kamu`
-    **Karakter Aa-Zz**
+`nama`: `nama kamu`
+**Karakter Aa-Zz**
           
-    `kelas`: `kelas kamu`
-    **[XI/XII] [MIPA/IPS] [1-12]**,
-    **[X] [1-12]**
-     `angkatan`: `tahun masuk`
-    **4 digit angka**;
-    **4 digit angka/4 digit angka**
+`kelas`: `kelas kamu`
+**[XI/XII] [MIPA/IPS] [1-12]**,
+**[X] [1-12]**
+`angkatan`: `tahun masuk`
+**4 digit angka**;
+**4 digit angka/4 digit angka**
                     "#, false),
                     ("Contoh", r#"
-    1. /perkenalan `nama: Nama Saya` `kelas: X 3` `angkatan: 2021`
-    2. /perkenalan `nama: Nama Saya` `kelas: XI MIPA 3` `angkatan: 2021/2022` `medsos: @medsos_saya`
+1. /perkenalan `nama: Nama Saya` `kelas: X 3` `angkatan: 2021`
+2. /perkenalan `nama: Nama Saya` `kelas: XI MIPA 3` `angkatan: 2021/2022` `medsos: @medsos_saya`
                     "#, false),
                     ("Catatan", r#"
-    1. Tidak perlu memasukkan tanda [] untuk `kelas`.
-    2. Gunakan hanya salah satu format dari dua untuk `angkatan`.
-    3. Tidak perlu memasukkan **spasi** setelah menekan/memilih opsi yang hendak diisi.
-    4. Tidak perlu memasukkan **spasi** setelah selesai memasukkan `nama`, `kelas`, dan `angkatan`; langsung tekan opsi yang diperlukan.
-    5. Opsi `medsos` adalah opsional; tidak wajib diisi.
+1. Tidak perlu memasukkan tanda [] untuk `kelas`.
+2. Gunakan hanya salah satu format dari dua untuk `angkatan`.
+3. Tidak perlu memasukkan **spasi** setelah menekan/memilih opsi yang hendak diisi.
+4. Tidak perlu memasukkan **spasi** setelah selesai memasukkan `nama`, `kelas`, dan `angkatan`; langsung tekan opsi yang diperlukan.
+5. Opsi `medsos` adalah opsional; tidak wajib diisi.
                     "#, false)
                 ])
+                .thumbnail(ctx.cache.current_user().avatar_url().unwrap())
+                .image("https://media.discordapp.net/attachments/1024284784077320255/1032675495575302204/unknown.png")
                 .footer(|f| f.icon_url(&user.avatar_url().unwrap()).text(&user.tag()))
                 .timestamp(Timestamp::now())
             })

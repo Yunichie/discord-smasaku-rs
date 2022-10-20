@@ -25,6 +25,7 @@ use serenity::{
     }
 };
 use regex::Regex;
+//use tokio::fs::File;
 
 pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
     command
@@ -211,7 +212,7 @@ Contoh: 2021/2022 atau cukup 2021.
             // Kirim embed berisi data (perkenalan) yang dimasukkan
             let perkenalan_slash = options
                 .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
+                    resp.kind(InteractionResponseType::DeferredChannelMessageWithSource)
                         .interaction_response_data(|msg| {
                             msg.embed(|e| {
                                 e.color((247, 10, 10))
@@ -225,11 +226,10 @@ Contoh: 2021/2022 atau cukup 2021.
                                     .thumbnail(&user.avatar_url().unwrap())
                                     .footer(|f| f.text(&user.tag()))
                                     .timestamp(Timestamp::now())
+                            }).add_file("./image/welcome.jpg")
                             })
-                            //.add_file("./image/welcome.jpg")
                             // TODO: .add_file()
                         }) //.edit_original_interaction_response()
-                })
                 .await;
 
             // Follow-up untuk mengambil role kelas

@@ -1,7 +1,7 @@
 ## To-Do
 
 ### Bantuan
-- [ ] Application; client; bot avatar.
+- [X] Application; client; bot avatar.
 
 ### Perkenalan-slash
 - [ ] Gambar "selamat datang".
