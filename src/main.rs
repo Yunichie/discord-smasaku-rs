@@ -5,7 +5,13 @@ use serenity::{
     async_trait,
     model::{
         application::{command::Command, interaction::Interaction},
-        gateway::Ready,
+        gateway::{
+            Ready,
+            Activity
+        },
+        user::{
+            OnlineStatus
+        },
         Timestamp,
     },
     prelude::*,
@@ -45,6 +51,10 @@ impl EventHandler for Handler {
 
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("{} is connected!", ready.user.name);
+
+        let activity = Activity::listening("Mars SMAN 1 Kudus");
+
+        ctx.set_presence(Some(activity), OnlineStatus::default()).await;
 
         let guild_command = Command::create_global_application_command(&ctx.http, |command| {
             commands::perkenalan_slash::register(command)

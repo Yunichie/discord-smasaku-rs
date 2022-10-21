@@ -3,7 +3,6 @@ use serenity::{
     model::{
         application::interaction::{
             application_command::ApplicationCommandInteraction,
-            //Interaction,
             InteractionResponseType,
         },
         Timestamp,

@@ -101,13 +101,12 @@ pub async fn run(options: &mut ApplicationCommandInteraction, ctx: &Context) {
         medsos.push_str(medsos_opsi.unwrap().value.unwrap().as_str().unwrap());
     }
 
-    let user = &options.user;
     //let cache = &ctx.cache;
+    let user = &options.user;
     let roles = &options.member.as_ref().unwrap().roles;
-    let role_id = &1025826518259224608;
-    let ch_id = &1024284784077320255;
+    let role_id = &895264956751163412;
+    let ch_id = &895265138565865502;
 
-    // TODO: role id & channel id
     // User sudah mempunyai role smasaku
     if roles.iter().any(|&i| i.as_u64() == role_id) {
         let sudah_punya_role = options
@@ -201,18 +200,11 @@ Contoh: 2021/2022 atau cukup 2021.
                 println!("Error sending message: {:?}", why);
             }
         } else {
-            // Beri role smasaku
-            let _add_smasaku = options
-                .member
-                .as_mut()
-                .unwrap()
-                .add_role(&ctx.http, *role_id)
-                .await;
-
+            // TODO: Gunakan file!
             // Kirim embed berisi data (perkenalan) yang dimasukkan
             let perkenalan_slash = options
                 .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::DeferredChannelMessageWithSource)
+                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
                         .interaction_response_data(|msg| {
                             msg.embed(|e| {
                                 e.color((247, 10, 10))
@@ -224,12 +216,12 @@ Contoh: 2021/2022 atau cukup 2021.
                                         ("Media Sosial", medsos, false),
                                     ])
                                     .thumbnail(&user.avatar_url().unwrap())
+                                    .image("https://media.discordapp.net/attachments/895265138565865502/1019552086444232755/welcome.jpg")
                                     .footer(|f| f.text(&user.tag()))
                                     .timestamp(Timestamp::now())
-                            }).add_file("./image/welcome.jpg")
+                                })
                             })
-                            // TODO: .add_file()
-                        }) //.edit_original_interaction_response()
+                        })
                 .await;
 
             // Follow-up untuk mengambil role kelas
@@ -240,6 +232,23 @@ Contoh: 2021/2022 atau cukup 2021.
 
             if let Err(why) = perkenalan_slash {
                 println!("Error sending message: {:?}", why);
+
+                let _kesalahan = options
+                .create_interaction_response(&ctx.http, |resp| {
+                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
+                        .interaction_response_data(|msg| {
+                            msg.ephemeral(true);
+                            msg.content("Terjadi kesalahan! Harap jalankan ulang perintah.")
+                        })  
+                }).await;
+            } else {
+                // Beri role smasaku
+                let _add_smasaku = options
+                    .member
+                    .as_mut()
+                    .unwrap()
+                    .add_role(&ctx.http, *role_id)
+                    .await;
             }
         }
     }
