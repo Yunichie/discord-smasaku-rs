@@ -227,7 +227,7 @@ Contoh: 2021/2022 atau cukup 2021.
             // Follow-up untuk mengambil role kelas
             let _followup = options
         .create_followup_message(&ctx.http, |resp| {
-            resp.content("@user Jangan lupa untuk mengambil _roles_ di #roles setelah memperkenalkan diri.")
+            resp.content(format!("<@{}> Jangan lupa untuk mengambil _roles_ di <#881539526227537950> setelah memperkenalkan diri.", options.user.id.as_u64()))
         }).await;
 
             if let Err(why) = perkenalan_slash {
