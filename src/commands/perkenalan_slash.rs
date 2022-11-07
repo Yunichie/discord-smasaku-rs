@@ -11,9 +11,7 @@ use serenity::{
             },
             application::{
                 interaction::{
-                    application_command::{
-                        ApplicationCommandInteraction
-                    },
+                    Interaction,
                     InteractionResponseType
                 }
             },
@@ -29,7 +27,7 @@ use regex::Regex;
 
 pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
     command
-        .name("perkenalan")
+        .name("perkenalan-slash")
         .description("Perkenalkan diri kamu!")
         .create_option(|option| {
             option
@@ -61,7 +59,8 @@ pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicatio
         })
 }
 
-pub async fn run(options: &mut ApplicationCommandInteraction, ctx: &Context) {
+pub async fn run(interaction: Interaction, ctx: &Context) {
+    let mut options = interaction.application_command().unwrap();
     let nama = options
         .data
         .options
@@ -129,7 +128,7 @@ pub async fn run(options: &mut ApplicationCommandInteraction, ctx: &Context) {
             .create_interaction_response(&ctx.http, |resp| {
                 resp.kind(InteractionResponseType::ChannelMessageWithSource)
                     .interaction_response_data(|msg| {
-                        msg.content("Kamu hanya bisa memperkenalkan diri di #introduction!")
+                        msg.content("Kamu hanya bisa memperkenalkan diri di <#895265138565865502>!")
                     })
             })
             .await;

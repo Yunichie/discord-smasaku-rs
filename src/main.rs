@@ -22,13 +22,14 @@ struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        if let Interaction::ApplicationCommand(mut command) = interaction {
+    async fn interaction_create(&self, ctx: Context, mut interaction: Interaction) {
+        if let Interaction::ApplicationCommand(ref mut command) = interaction {
             println!("Received command interaction: {:#?}", command);
 
             let _content = match command.data.name.as_str() {
-                "perkenalan" => commands::perkenalan_slash::run(&mut command, &ctx).await,
-                "bantuan" => commands::bantuan::run(&ctx, &command).await,
+                "perkenalan" => commands::perkenalan::run(interaction, &ctx).await,
+                "perkenalan-slash" => commands::perkenalan_slash::run(interaction, &ctx).await,
+                "bantuan" => commands::bantuan::run(&ctx, interaction).await,
                 _ => {
                     let msg = command
                         .channel_id
@@ -57,7 +58,7 @@ impl EventHandler for Handler {
         ctx.set_presence(Some(activity), OnlineStatus::default()).await;
 
         let guild_command = Command::create_global_application_command(&ctx.http, |command| {
-            commands::perkenalan_slash::register(command)
+            commands::perkenalan::register(command)
         })
         .await;
 

@@ -1,9 +1,13 @@
 use serenity::{
-    builder::CreateApplicationCommand,
+    builder::{
+        CreateApplicationCommand
+    },
     model::{
-        application::interaction::{
-            application_command::ApplicationCommandInteraction,
-            InteractionResponseType,
+        application::{
+            interaction::{
+                Interaction,
+                InteractionResponseType,
+            }
         },
         Timestamp,
     },
@@ -14,7 +18,8 @@ pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicatio
     command.name("bantuan").description("Dapatkan bantuan!")
 }
 
-pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
+pub async fn run(ctx: &Context, interaction: Interaction) {
+    let interaction = interaction.application_command().unwrap();
     let user = &interaction.user;
 
     let bantuan = interaction
@@ -27,9 +32,13 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
                 .color((247, 10, 10))
                 .title("Bantuan")
                 .fields(vec![
-                    ("Nama", "`/perkenalan`", false),
-                    ("Penggunaan", "/perkenalan `nama:` `kelas:` `angkatan:`", false),
+                    ("Nama", "`/perkenalan`, `/perkenalan-slash`", false),
+                    ("Penggunaan", r#"
+/perkenalan
+/perkenalan-slash `nama:` `kelas:` `angkatan:`
+                    "#, false),
                     ("Format", r#"
+(`/perkenalan` dan `/perkenalan-slash`).
 `nama`: `nama kamu`
 **Karakter Aa-Zz**
           
@@ -41,10 +50,12 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
 **4 digit angka/4 digit angka**
                     "#, false),
                     ("Contoh", r#"
-1. /perkenalan `nama: Nama Saya` `kelas: X 3` `angkatan: 2021`
-2. /perkenalan `nama: Nama Saya` `kelas: XI MIPA 3` `angkatan: 2021/2022` `medsos: @medsos_saya`
+(`/perkenalan-slash`)
+1. /perkenalan-slash `nama: Nama Saya` `kelas: X 3` `angkatan: 2021`
+2. /perkenalan-slash `nama: Nama Saya` `kelas: XI MIPA 3` `angkatan: 2021/2022` `medsos: @medsos_saya`
                     "#, false),
                     ("Catatan", r#"
+(`/perkenalan` dan `/perkenalan-slash`)
 1. Tidak perlu memasukkan tanda [] untuk `kelas`.
 2. Gunakan hanya salah satu format dari dua untuk `angkatan`.
 3. Tidak perlu memasukkan **spasi** setelah menekan/memilih opsi yang hendak diisi.
@@ -54,6 +65,7 @@ pub async fn run(ctx: &Context, interaction: &ApplicationCommandInteraction) {
                 ])
                 .thumbnail(ctx.cache.current_user().avatar_url().unwrap())
                 .image("https://media.discordapp.net/attachments/1024284784077320255/1032675495575302204/unknown.png")
+                .image("https://media.discordapp.net/attachments/1024284784077320255/1039201766589337630/perkenalan-modal.png?width=400&height=480")
                 .footer(|f| f.icon_url(&user.avatar_url().unwrap()).text(&user.tag()))
                 .timestamp(Timestamp::now())
             })
