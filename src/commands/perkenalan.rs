@@ -4,6 +4,11 @@ use serenity::{
     builder::{
         CreateApplicationCommand
     },
+    collector::{
+        modal_interaction_collector::{
+            CollectModalInteraction
+        }
+    },
     model::{
         prelude::{
             command::{
@@ -15,7 +20,8 @@ use serenity::{
                     InteractionResponseType
                 },
                 component::{
-                    InputTextStyle
+                    InputTextStyle,
+                    ActionRowComponent
                 }
             },
         },
@@ -35,7 +41,7 @@ pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicatio
 }
 
 pub async fn run(interaction: Interaction, ctx: &Context) {
-    let modal = interaction.application_command().unwrap()
+    let modal = interaction.to_owned().application_command().unwrap()
     .create_interaction_response(&ctx.http, |resp| {
         resp.kind(InteractionResponseType::Modal)
             .interaction_response_data(|response| {
@@ -82,15 +88,39 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             })  
     }).await;
 
-    // TODO: Buat collector untuk mendapatkan user modal input
-    // if let Some(value) = &interaction
-    //                      .modal_submit().unwrap()
-    //                      .message.unwrap()
-    //                      .author.await_modal_interaction(ctx).timeout(Duration::from_secs) ...?
-
-    println!("{:?}", modal);
-
     if let Err(why) = modal {
         println!("Error sending message: {:?}", why);
     }
+
+    let response = CollectModalInteraction::new(&ctx.shard)
+                    .author_id(interaction.application_command().unwrap().user.id)
+                    .timeout(Duration::from_secs(3600))
+                    .await
+                    .unwrap();
+
+    let nama = match response.data.components.get(0).unwrap().components.get(0).unwrap() {
+        ActionRowComponent::InputText(inp) => inp,
+        _ => return
+    };
+
+    let kelas = match response.data.components.get(1).unwrap().components.get(0).unwrap() {
+        ActionRowComponent::InputText(inp) => inp,
+        _ => return
+    };
+
+    let angkatan = match response.data.components.get(2).unwrap().components.get(0).unwrap() {
+        ActionRowComponent::InputText(inp) => inp,
+        _ => return
+    };
+
+    let medsos = match response.data.components.get(3).unwrap().components.get(0).unwrap() {
+        ActionRowComponent::InputText(inp) => inp,
+        _ => return
+    };
+
+    //println!("{} {} {} {}", nama.value, kelas.value, angkatan.value, medsos.value);
+    //println!("{:?}", medsos);
+
+    // TODO: Implementasi logic
+
 }

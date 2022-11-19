@@ -17,6 +17,10 @@
 - [X] Follow-up message untuk mengambil role.
 - [X] Beri role `smasaku` setelah memperkenalkan diri.
 
+### Perkenalan (modal)
+- [X] Collector
+- [ ] Logic
+
 ### Modul
 - [X] capitalize() sebagai modul tersendiri.
 
