@@ -30,7 +30,7 @@ Dapatkan bantuan untuk perintah perkenalan!
 
 ## perkenalan (modal)
 
-**Sedang dalam tahap pengerjaan.**
+`/perkenalan`
 <p align="center">
     <img src="image/bantuan/perkenalan-modal.png">
 </p>

@@ -19,7 +19,7 @@
 
 ### Perkenalan (modal)
 - [X] Collector
-- [ ] Logic
+- [X] Logic
 
 ### Modul
 - [X] capitalize() sebagai modul tersendiri.
