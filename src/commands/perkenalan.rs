@@ -34,117 +34,27 @@ use std::time::Duration;
 pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
     command
         .name("perkenalan")
-        .description("[Sedang dalam pengerjaan; gunakan perkenalan-slash]")
+        .description("Perkenalkan diri kamu... menggunakan Interaksi Modal!")
 }
 
 pub async fn run(interaction: Interaction, ctx: &Context) {
-    /*
-    let modal = interaction
-        .to_owned()
-        .application_command()
-        .unwrap()
-        .create_interaction_response(&ctx.http, |resp| {
-            resp.kind(InteractionResponseType::Modal)
-                .interaction_response_data(|response| {
-                    response.custom_id("perkenalan");
-                    response.title("Perkenalan");
-                    response.components(|act_row| {
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_nama");
-                                input.style(InputTextStyle::Short);
-                                input.label("Nama");
-                                input.placeholder("Masukkan nama kamu!");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_kelas");
-                                input.style(InputTextStyle::Short);
-                                input.label("Kelas");
-                                input.placeholder("Masukkan kelas kamu!");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_angkatan");
-                                input.style(InputTextStyle::Short);
-                                input.label("Angkatan");
-                                input.placeholder("Angkatan tahun berapa kamu?");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_medsos");
-                                input.style(InputTextStyle::Short);
-                                input.label("Media Sosial");
-                                input.placeholder("Media sosial kamu! (opsional)");
-                                input.required(false)
-                            })
-                        })
-                    })
-                })
-        })
-        .await;
-
-    if let Err(why) = modal {
-        println!("Error sending message: {:?}", why);
-    }
-
-    let response = CollectModalInteraction::new(&ctx.shard)
-        .author_id(interaction.to_owned().application_command().unwrap().user.id)
-        .timeout(Duration::from_secs(3600))
-        .await
-        .unwrap();
-
-    let collected = response
-        .data
-        .components
-        .to_owned()
-        .into_iter()
-        .flat_map(|x| x.to_owned().components)
-        .collect::<Vec<ActionRowComponent>>();
-
-    let data = collected
-        .to_owned()
-        .iter()
-        .map(|x| match x {
-            ActionRowComponent::InputText(inp) => {
-                if inp.to_owned().value == "" {
-                    return "-".to_string();
-                } else {
-                    inp.to_owned().value
-                }
-            },
-            _ => format!("not found")
-        })
-        .collect::<Vec<String>>();
-        */
-
-    //println!("{:?}", data);
-
-    // TODO: Implementasi logic
     let mut command = interaction.to_owned().application_command().unwrap();
     let user = &command.user;
     let roles = &command.member.as_ref().unwrap().roles;
-    let role_id = &1025826518259224608;
-    let ch_id = &1024284784077320255;
+    let role_id = &895264956751163412; // id role smasaku
+    let ch_id = &895265138565865502; // id channel #introduction
 
+    // User sudah mempunyai role smasaku
     if roles.iter().any(|&i| i.as_u64() == role_id) {
         let sudah_punya_role = command
             .create_interaction_response(&ctx.http, |resp| {
                 resp.kind(InteractionResponseType::ChannelMessageWithSource)
-                    .interaction_response_data(|msg| {
-                        msg.content("Kamu sudah memperkenalkan diri!")
-                    })
+                    .interaction_response_data(|msg| msg.content("Kamu sudah memperkenalkan diri!"))
             })
             .await;
 
         if let Err(why) = sudah_punya_role {
-            println!("Error sending message: {:?}", why);
+            println!("Error (sudah_punya_role) sending message: {:?}", why);
         }
     }
 
@@ -160,104 +70,114 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = ch_err {
-            println!("Error sending message: {:?}", why);
+            println!("Error (ch_err) sending message: {:?}", why);
         }
     }
 
     if !roles.iter().any(|&i| i.as_u64() == role_id) && command.channel_id.as_u64() == ch_id {
         let modal = interaction
-        .to_owned()
-        .application_command()
-        .unwrap()
-        .create_interaction_response(&ctx.http, |resp| {
-            resp.kind(InteractionResponseType::Modal)
-                .interaction_response_data(|response| {
-                    response.custom_id("perkenalan");
-                    response.title("Perkenalan");
-                    response.components(|act_row| {
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_nama");
-                                input.style(InputTextStyle::Short);
-                                input.label("Nama");
-                                input.placeholder("Masukkan nama kamu!");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_kelas");
-                                input.style(InputTextStyle::Short);
-                                input.label("Kelas");
-                                input.placeholder("Masukkan kelas kamu!");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_angkatan");
-                                input.style(InputTextStyle::Short);
-                                input.label("Angkatan");
-                                input.placeholder("Angkatan tahun berapa kamu?");
-                                input.required(true)
-                            })
-                        });
-                        act_row.create_action_row(|modal| {
-                            modal.create_input_text(|input| {
-                                input.custom_id("perkenalan_medsos");
-                                input.style(InputTextStyle::Short);
-                                input.label("Media Sosial");
-                                input.placeholder("Media sosial kamu! (opsional)");
-                                input.required(false)
+            .to_owned()
+            .application_command()
+            .unwrap()
+            .create_interaction_response(&ctx.http, |resp| {
+                resp.kind(InteractionResponseType::Modal)
+                    .interaction_response_data(|response| {
+                        response.custom_id("perkenalan");
+                        response.title("Perkenalan");
+                        response.components(|act_row| {
+                            act_row.create_action_row(|modal| {
+                                modal.create_input_text(|input| {
+                                    input.custom_id("perkenalan_nama");
+                                    input.style(InputTextStyle::Short);
+                                    input.label("Nama");
+                                    input.placeholder("Masukkan nama kamu!");
+                                    input.required(true)
+                                })
+                            });
+                            act_row.create_action_row(|modal| {
+                                modal.create_input_text(|input| {
+                                    input.custom_id("perkenalan_kelas");
+                                    input.style(InputTextStyle::Short);
+                                    input.label("Kelas");
+                                    input.placeholder("Masukkan kelas kamu!");
+                                    input.required(true)
+                                })
+                            });
+                            act_row.create_action_row(|modal| {
+                                modal.create_input_text(|input| {
+                                    input.custom_id("perkenalan_angkatan");
+                                    input.style(InputTextStyle::Short);
+                                    input.label("Angkatan");
+                                    input.placeholder("Angkatan tahun berapa kamu?");
+                                    input.required(true)
+                                })
+                            });
+                            act_row.create_action_row(|modal| {
+                                modal.create_input_text(|input| {
+                                    input.custom_id("perkenalan_medsos");
+                                    input.style(InputTextStyle::Short);
+                                    input.label("Media Sosial");
+                                    input.placeholder("Media sosial kamu! (opsional)");
+                                    input.required(false)
+                                })
                             })
                         })
                     })
-                })
-        })
-        .await;
+            })
+            .await;
 
-    if let Err(why) = modal {
-        println!("Error sending message: {:?}", why);
-    }
+        if let Err(why) = modal {
+            println!("Error (modal) sending message: {:?}", why);
+        }
 
-    let response = CollectModalInteraction::new(&ctx.shard)
-        .author_id(interaction.to_owned().application_command().unwrap().user.id)
-        .timeout(Duration::from_secs(3600))
-        .await
-        .unwrap();
+        let response = CollectModalInteraction::new(&ctx.shard)
+            .author_id(
+                interaction
+                    .to_owned()
+                    .application_command()
+                    .unwrap()
+                    .user
+                    .id,
+            )
+            .timeout(Duration::from_secs(3600))
+            .await
+            .unwrap();
 
-    let collected = response
-        .data
-        .components
-        .to_owned()
-        .into_iter()
-        .flat_map(|x| x.to_owned().components)
-        .collect::<Vec<ActionRowComponent>>();
+        let collected = response
+            .data
+            .components
+            .to_owned()
+            .into_iter()
+            .flat_map(|x| x.to_owned().components)
+            .collect::<Vec<ActionRowComponent>>();
 
-    let data = collected
-        .to_owned()
-        .iter()
-        .map(|x| match x {
-            ActionRowComponent::InputText(inp) => {
-                if inp.to_owned().value == "" {
-                    return "-".to_string();
-                } else {
-                    inp.to_owned().value
+        let data = collected
+            .to_owned()
+            .iter()
+            .map(|x| match x {
+                ActionRowComponent::InputText(inp) => {
+                    if inp.to_owned().value == "" {
+                        return "-".to_string();
+                    } else {
+                        inp.to_owned().value
+                    }
                 }
-            },
-            _ => format!("not found")
-        })
-        .collect::<Vec<String>>();
+                _ => format!("not found"),
+            })
+            .collect::<Vec<String>>();
+        // data[0] = nama
+        // data[1] = kelas
+        // data[2] = angkatan
+        // data [3] = medsos
 
         let xi_xii = Regex::new(r"^(XI|XII)\s(MIPA|IPS)\s([0-9]|1[0-2])$").unwrap();
         let x = Regex::new(r"^(X)\s([0-9]|1[0-2])$").unwrap();
         let regex_angkatan = Regex::new(r#"^(([0-9]){4})|(^([0-9]){4}/([0-9]){4})$"#).unwrap();
-        
         if !(x.is_match(&data[1].to_uppercase())) && !(xi_xii.is_match(&data[1].to_uppercase())) {
             // Kirim embed error!
-            let kls_err = command
+            let kls_err = response
                 .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::DeferredUpdateMessage)
+                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
                         .interaction_response_data(|msg| {
                             msg.embed(|e| {
                                 e.color((247, 10, 10))
@@ -269,7 +189,7 @@ Format Kelas yang benar:
 **X [1-12]**.
 
 Contoh: X 3, XI MIPA 3
-                    "#
+                    "#,
                                     )
                                     .footer(|f| f.text("[] tidak perlu dimasukkan."))
                             })
@@ -278,13 +198,13 @@ Contoh: X 3, XI MIPA 3
                 .await;
 
             if let Err(why) = kls_err {
-                println!("Error sending message: {:?}", why);
+                println!("Error (kls_err) sending message: {:?}", why);
             }
         } else if !(regex_angkatan.is_match(&data[2])) {
             // Kirim embed error!
-            let angkt_err = command
+            let angkt_err = response
                 .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::DeferredUpdateMessage)
+                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
                         .interaction_response_data(|msg| {
                             msg.embed(|e| {
                                 e.color((247, 10, 10))
@@ -296,7 +216,7 @@ Format Angkatan yang benar:
 2. **[tahun masuk]**.
 
 Contoh: 2021/2022 atau cukup 2021.
-                    "#
+                    "#,
                                     )
                                     .footer(|f| f.text("[] tidak perlu dimasukkan."))
                             })
@@ -305,14 +225,14 @@ Contoh: 2021/2022 atau cukup 2021.
                 .await;
 
             if let Err(why) = angkt_err {
-                println!("Error sending message: {:?}", why);
+                println!("Error (angkt_err) sending message: {:?}", why);
             }
         } else {
             // TODO: Gunakan file!
             // Kirim embed berisi data (perkenalan) yang dimasukkan
-            let perkenalan_slash = command
+            let perkenalan_slash = response
                 .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::DeferredUpdateMessage)
+                    resp.kind(InteractionResponseType::ChannelMessageWithSource)
                         .interaction_response_data(|msg| {
                             msg.embed(|e| {
                                 e.color((247, 10, 10))
@@ -339,16 +259,17 @@ Contoh: 2021/2022 atau cukup 2021.
         }).await;
 
             if let Err(why) = perkenalan_slash {
-                println!("Error sending message: {:?}", why);
+                println!("Error (perkenalan_slash) sending message: {:?}", why);
 
                 let _kesalahan = command
-                .create_interaction_response(&ctx.http, |resp| {
-                    resp.kind(InteractionResponseType::DeferredUpdateMessage)
-                        .interaction_response_data(|msg| {
-                            msg.ephemeral(true);
-                            msg.content("Terjadi kesalahan! Harap jalankan ulang perintah.")
-                        })  
-                }).await;
+                    .create_interaction_response(&ctx.http, |resp| {
+                        resp.kind(InteractionResponseType::ChannelMessageWithSource)
+                            .interaction_response_data(|msg| {
+                                msg.ephemeral(true);
+                                msg.content("Terjadi kesalahan! Harap jalankan ulang perintah.")
+                            })
+                    })
+                    .await;
             } else {
                 // Beri role smasaku
                 let _add_smasaku = command

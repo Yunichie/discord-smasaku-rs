@@ -103,8 +103,8 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
     //let cache = &ctx.cache;
     let user = &options.user;
     let roles = &options.member.as_ref().unwrap().roles;
-    let role_id = &895264956751163412;
-    let ch_id = &895265138565865502;
+    let role_id = &895264956751163412;  // id role smasaku
+    let ch_id = &895265138565865502;    // id channel #introduction
 
     // User sudah mempunyai role smasaku
     if roles.iter().any(|&i| i.as_u64() == role_id) {
@@ -118,7 +118,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = sudah_punya_role {
-            println!("Error sending message: {:?}", why);
+            println!("Error (sudah_punya_role) sending message: {:?}", why);
         }
     }
 
@@ -134,7 +134,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = ch_err {
-            println!("Error sending message: {:?}", why);
+            println!("Error (ch_err) sending message: {:?}", why);
         }
     }
 
@@ -169,7 +169,7 @@ Contoh: X 3, XI MIPA 3
                 .await;
 
             if let Err(why) = kls_err {
-                println!("Error sending message: {:?}", why);
+                println!("Error (kls_err) sending message: {:?}", why);
             }
         } else if !(regex_angkatan.is_match(&angkatan)) {
             // Kirim embed error!
@@ -196,7 +196,7 @@ Contoh: 2021/2022 atau cukup 2021.
                 .await;
 
             if let Err(why) = angkt_err {
-                println!("Error sending message: {:?}", why);
+                println!("Error  (angkt_err) sending message: {:?}", why);
             }
         } else {
             // TODO: Gunakan file!
@@ -230,7 +230,7 @@ Contoh: 2021/2022 atau cukup 2021.
         }).await;
 
             if let Err(why) = perkenalan_slash {
-                println!("Error sending message: {:?}", why);
+                println!("Error (perkenalan_slash) sending message: {:?}", why);
 
                 let _kesalahan = options
                 .create_interaction_response(&ctx.http, |resp| {
