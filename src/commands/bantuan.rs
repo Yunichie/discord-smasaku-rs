@@ -18,7 +18,7 @@ pub fn register(command: &mut CreateApplicationCommand) -> &mut CreateApplicatio
     command.name("bantuan").description("Dapatkan bantuan!")
 }
 
-pub async fn run(ctx: &Context, interaction: Interaction) {
+pub async fn run(interaction: Interaction, ctx: &Context) {
     let interaction = interaction.application_command().unwrap();
     let user = &interaction.user;
 
@@ -73,6 +73,6 @@ pub async fn run(ctx: &Context, interaction: Interaction) {
     }).await;
 
     if let Err(why) = bantuan {
-        println!("Error sending message: {:?}", why);
+        println!("Terjadi kesalahan saat mengirim pesan: {:?}", why);
     }
 }

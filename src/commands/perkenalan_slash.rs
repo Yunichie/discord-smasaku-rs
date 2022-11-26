@@ -118,7 +118,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = sudah_punya_role {
-            println!("Error (sudah_punya_role) sending message: {:?}", why);
+            println!("Terjadi kesalahan (sudah_punya_role) saat mengirim pesan: {:?}", why);
         }
     }
 
@@ -134,7 +134,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = ch_err {
-            println!("Error (ch_err) sending message: {:?}", why);
+            println!("Terjadi kesalahan (ch_err) saat mengirim pesan: {:?}", why);
         }
     }
 
@@ -169,7 +169,7 @@ Contoh: X 3, XI MIPA 3
                 .await;
 
             if let Err(why) = kls_err {
-                println!("Error (kls_err) sending message: {:?}", why);
+                println!("Terjadi kesalahan (kls_err) saat mengirim pesan: {:?}", why);
             }
         } else if !(regex_angkatan.is_match(&angkatan)) {
             // Kirim embed error!
@@ -196,7 +196,7 @@ Contoh: 2021/2022 atau cukup 2021.
                 .await;
 
             if let Err(why) = angkt_err {
-                println!("Error  (angkt_err) sending message: {:?}", why);
+                println!("Terjadi kesalahan  (angkt_err) saat mengirim pesan: {:?}", why);
             }
         } else {
             // TODO: Gunakan file!
@@ -230,7 +230,7 @@ Contoh: 2021/2022 atau cukup 2021.
         }).await;
 
             if let Err(why) = perkenalan_slash {
-                println!("Error (perkenalan_slash) sending message: {:?}", why);
+                println!("Terjadi kesalahan (perkenalan_slash) saat mengirim pesan: {:?}", why);
 
                 let _kesalahan = options
                 .create_interaction_response(&ctx.http, |resp| {

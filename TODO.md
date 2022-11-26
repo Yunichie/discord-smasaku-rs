@@ -21,6 +21,9 @@
 - [X] Collector
 - [X] Logic
 
+### Kelas
+- [ ] Ganti nama role kelas untuk kelas 10 dan 11.
+
 ### Modul
 - [X] capitalize() sebagai modul tersendiri.
 

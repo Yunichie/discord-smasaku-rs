@@ -24,26 +24,27 @@ struct Handler;
 impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, mut interaction: Interaction) {
         if let Interaction::ApplicationCommand(ref mut command) = interaction {
-            println!("Received command interaction: {:#?}", command);
+            println!("Perintah diterima: {:#?}", command);
 
             let _content = match command.data.name.as_str() {
                 "perkenalan" => commands::perkenalan::run(interaction, &ctx).await,
                 "perkenalan-slash" => commands::perkenalan_slash::run(interaction, &ctx).await,
-                "bantuan" => commands::bantuan::run(&ctx, interaction).await,
+                "kelas" => commands::kelas::run(interaction, &ctx).await,
+                "bantuan" => commands::bantuan::run(interaction, &ctx).await,
                 _ => {
                     let msg = command
                         .channel_id
                         .send_message(&ctx.http, |msg| {
                             msg.embed(|e| {
-                                e.title("Error")
-                                    .description("Not implemented")
+                                e.title("Terjadi kesalahan")
+                                    .description("Tidak terimplementasi")
                                     .timestamp(Timestamp::now())
                             })
                         })
                         .await;
 
                     if let Err(why) = msg {
-                        println!("Error sending message: {:?}", why);
+                        println!("Gagal mengirim pesan: {:?}", why);
                     }
                 }
             };
@@ -57,29 +58,29 @@ impl EventHandler for Handler {
 
         ctx.set_presence(Some(activity), OnlineStatus::default()).await;
 
-        let guild_command = Command::create_global_application_command(&ctx.http, |command| {
-            commands::perkenalan::register(command)
+        let commands = Command::create_global_application_command(&ctx.http, |command| {
+            commands::kelas::register(command)
         })
         .await;
 
         println!(
-            "I now have the following guild slash commands: {:#?}",
-            guild_command
+            "Slash Command diterima: {:#?}",
+            commands
         );
     }
 }
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().expect("Failed to load .env file");
-    let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
+    dotenv::dotenv().expect("Gagal memuat file .env");
+    let token = env::var("DISCORD_TOKEN").expect("Tidak ada token di .env");
 
     let mut client = Client::builder(token, GatewayIntents::empty())
         .event_handler(Handler)
         .await
-        .expect("Error creating client");
+        .expect("Terjadi kesalahan saat membuat klien");
 
     if let Err(why) = client.start().await {
-        println!("Client error: {:?}", why);
+        println!("Kesalahan (klien): {:?}", why);
     }
 }

@@ -54,7 +54,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = sudah_punya_role {
-            println!("Error (sudah_punya_role) sending message: {:?}", why);
+            println!("Terjadi kesalahan (sudah_punya_role) saat mengirim pesan: {:?}", why);
         }
     }
 
@@ -70,7 +70,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = ch_err {
-            println!("Error (ch_err) sending message: {:?}", why);
+            println!("Terjadi kesalahan (ch_err) saat mengirim pesan: {:?}", why);
         }
     }
 
@@ -127,7 +127,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
             .await;
 
         if let Err(why) = modal {
-            println!("Error (modal) sending message: {:?}", why);
+            println!("Terjadi kesalahan (modal) saat mengirim pesan: {:?}", why);
         }
 
         let response = CollectModalInteraction::new(&ctx.shard)
@@ -137,7 +137,7 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
                     .application_command()
                     .unwrap()
                     .user
-                    .id,
+                    .id
             )
             .timeout(Duration::from_secs(3600))
             .await
@@ -162,17 +162,18 @@ pub async fn run(interaction: Interaction, ctx: &Context) {
                         inp.to_owned().value
                     }
                 }
-                _ => format!("not found"),
+                _ => format!("Tidak ditemukan!")
             })
             .collect::<Vec<String>>();
         // data[0] = nama
         // data[1] = kelas
         // data[2] = angkatan
-        // data [3] = medsos
+        // data[3] = medsos
 
         let xi_xii = Regex::new(r"^(XI|XII)\s(MIPA|IPS)\s([0-9]|1[0-2])$").unwrap();
         let x = Regex::new(r"^(X)\s([0-9]|1[0-2])$").unwrap();
         let regex_angkatan = Regex::new(r#"^(([0-9]){4})|(^([0-9]){4}/([0-9]){4})$"#).unwrap();
+
         if !(x.is_match(&data[1].to_uppercase())) && !(xi_xii.is_match(&data[1].to_uppercase())) {
             // Kirim embed error!
             let kls_err = response
@@ -189,7 +190,7 @@ Format Kelas yang benar:
 **X [1-12]**.
 
 Contoh: X 3, XI MIPA 3
-                    "#,
+                    "#
                                     )
                                     .footer(|f| f.text("[] tidak perlu dimasukkan."))
                             })
@@ -198,7 +199,7 @@ Contoh: X 3, XI MIPA 3
                 .await;
 
             if let Err(why) = kls_err {
-                println!("Error (kls_err) sending message: {:?}", why);
+                println!("Terjadi kesalahan (kls_err) saat mengirim pesan: {:?}", why);
             }
         } else if !(regex_angkatan.is_match(&data[2])) {
             // Kirim embed error!
@@ -216,7 +217,7 @@ Format Angkatan yang benar:
 2. **[tahun masuk]**.
 
 Contoh: 2021/2022 atau cukup 2021.
-                    "#,
+                    "#
                                     )
                                     .footer(|f| f.text("[] tidak perlu dimasukkan."))
                             })
@@ -225,7 +226,7 @@ Contoh: 2021/2022 atau cukup 2021.
                 .await;
 
             if let Err(why) = angkt_err {
-                println!("Error (angkt_err) sending message: {:?}", why);
+                println!("Terjadi kesalahan (angkt_err) saat mengirim pesan: {:?}", why);
             }
         } else {
             // TODO: Gunakan file!
@@ -259,7 +260,7 @@ Contoh: 2021/2022 atau cukup 2021.
         }).await;
 
             if let Err(why) = perkenalan_slash {
-                println!("Error (perkenalan_slash) sending message: {:?}", why);
+                println!("Terjadi kesalahan (perkenalan_slash) saat mengirim pesan: {:?}", why);
 
                 let _kesalahan = command
                     .create_interaction_response(&ctx.http, |resp| {
